@@ -46,7 +46,8 @@
     self.textField.returnKeyType = UIReturnKeyDone;
     self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    self.textField.placeholder = NSLocalizedString(@"Website URL", @"Placeholder text for web browser URL field");
+//    self.textField.placeholder = NSLocalizedString(@"Website URL", @"Placeholder text for web browser URL field");
+    self.textField.placeholder = NSLocalizedString(@"Website URL / Enter text to search", @"Placeholder text for web browser URL field");
     self.textField.backgroundColor = [UIColor colorWithWhite:220/255.0f alpha:1];
     self.textField.delegate = self;
     
@@ -216,6 +217,17 @@
     [textField resignFirstResponder];
     
     NSString *URLString = textField.text;
+    
+    // Check to see if input text contains 'space'.  If there is, then search using Google.
+    if ([URLString rangeOfString:@" "].location != NSNotFound) {
+        NSLog(@"Input text contains 'space'.");
+        // Loop to replace all
+        while ([URLString rangeOfString:@" "].location != NSNotFound) {
+            NSRange spaceFound = [URLString rangeOfString:@" "];
+            URLString = [URLString stringByReplacingCharactersInRange:spaceFound withString:@"+"];
+        }
+        URLString = [NSString stringWithFormat:@"www.google.com/search?q=%@", URLString];
+    }
     
     NSURL *URL = [NSURL URLWithString:URLString];
     
