@@ -37,6 +37,7 @@
     UINavigationController *navigationVC = (UINavigationController *)self.window.rootViewController;
     ViewController *browserVC = [[navigationVC viewControllers] firstObject];
     [browserVC resetWebView];
+    [browserVC welcomeAlert];
     
 }
 

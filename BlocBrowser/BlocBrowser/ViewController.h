@@ -13,5 +13,7 @@
 
 - (void) resetWebView;
 
+- (void) welcomeAlert;
+
 @end
 
