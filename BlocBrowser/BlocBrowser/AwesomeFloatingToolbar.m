@@ -75,8 +75,8 @@
     for (UILabel *thisLabel in self.labels) {
         NSUInteger currentLabelIndex = [self.labels indexOfObject:thisLabel];
         
-        CGFloat labelHeight = CGRectGetHeight(self.bounds) / 2;
-        CGFloat labelWidth = CGRectGetWidth(self.bounds) / 2;
+        CGFloat labelHeight = CGRectGetHeight(self.bounds) / 2;  // 2
+        CGFloat labelWidth = CGRectGetWidth(self.bounds) / 2;    // 2
         CGFloat labelX = 0;
         CGFloat labelY = 0;
         
