@@ -182,22 +182,27 @@
     NSLog(@"Long press...");
     
     if (recognizer.state == UIGestureRecognizerStateBegan)  {
-        
+        // Rotate colors in array
         for (NSUInteger i = 0; i < [self.colors count] ; i++) {
-            NSObject *obj = [self.colors lastObject];
+            NSObject *rotateColor = [self.colors lastObject];
             if (i < 2) {
-                [self.colors insertObject:obj atIndex:i+1];
+                [self.colors insertObject:rotateColor atIndex:i+1];
                 [self.colors removeLastObject];
             } else if (i == 2) {
-                [self.colors insertObject:obj atIndex:i];
+                [self.colors insertObject:rotateColor atIndex:i];
                 [self.colors removeLastObject];
             } else if (i == 3) {
-                [self.colors insertObject:obj atIndex:0];
+                [self.colors insertObject:rotateColor atIndex:0];
                 [self.colors removeLastObject];
             }
             
         }
-        
+    
+//        NSObject *moveObject = self.colors[0];
+//        [self.colors removeObjectAtIndex:0];
+//        [self.colors insertObject:moveObject atIndex:[self.colors count]];
+    
+        // Apply colors
         for (UIButton *thisButton in self.labels) {
             NSUInteger currentLabelIndex = [self.labels indexOfObject:thisButton];
             UIColor *colorForThisLabel = [self.colors objectAtIndex:currentLabelIndex];
