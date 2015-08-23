@@ -234,5 +234,12 @@
 }
 
 
+- (void)floatingToolbar:(AwesomeFloatingToolbar *)toolbar didTryToPinchWithScale:(UIPinchGestureRecognizer *)recognizer {
+    
+    recognizer.view.transform = CGAffineTransformScale(recognizer.view.transform, recognizer.scale, recognizer.scale);
+    recognizer.scale = 1;
+    
+}
+
 
 @end
