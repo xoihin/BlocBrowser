@@ -12,13 +12,14 @@
 @interface AwesomeFloatingToolbar ()
 
 @property (nonatomic, strong) NSArray *currentTitles;
-@property (nonatomic, strong) NSArray *colors;
+@property (nonatomic, strong) NSMutableArray *colors;
 @property (nonatomic, strong) NSArray *labels;
 @property (nonatomic, weak) UILabel *currentLabel;
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapGesture;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGesture;
 
 
 @end
@@ -36,10 +37,10 @@
         
         // Save the titles, and set the 4 colors
         self.currentTitles = titles;
-        self.colors = @[[UIColor colorWithRed:199/255.0 green:158/255.0 blue:203/255.0 alpha:1],
+        self.colors = [@[[UIColor colorWithRed:199/255.0 green:158/255.0 blue:203/255.0 alpha:1],
                         [UIColor colorWithRed:255/255.0 green:105/255.0 blue:97/255.0 alpha:1],
                         [UIColor colorWithRed:222/255.0 green:165/255.0 blue:164/255.0 alpha:1],
-                        [UIColor colorWithRed:255/255.0 green:179/255.0 blue:71/255.0 alpha:1]];
+                        [UIColor colorWithRed:255/255.0 green:179/255.0 blue:71/255.0 alpha:1]] mutableCopy];
         
         NSMutableArray *labelsArray = [[NSMutableArray alloc] init];
         
@@ -77,6 +78,9 @@
         
         self.pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchFired:)];
         [self addGestureRecognizer:self.pinchGesture];
+        
+        self.longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureFired:)];
+        [self addGestureRecognizer:self.longPressGesture];
     }
     
     return self;
@@ -174,6 +178,33 @@
 
 
 
+-(void)longPressGestureFired:(UILongPressGestureRecognizer *)recognizer {
+    NSLog(@"Long press...");
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan)  {
+        
+        for (NSUInteger i = 0; i < [self.colors count] ; i++) {
+            NSObject *obj = [self.colors lastObject];
+            if (i < 2) {
+                [self.colors insertObject:obj atIndex:i+1];
+                [self.colors removeLastObject];
+            } else if (i == 2) {
+                [self.colors insertObject:obj atIndex:i];
+                [self.colors removeLastObject];
+            } else if (i == 3) {
+                [self.colors insertObject:obj atIndex:0];
+                [self.colors removeLastObject];
+            }
+            
+        }
+        
+        for (UIButton *thisButton in self.labels) {
+            NSUInteger currentLabelIndex = [self.labels indexOfObject:thisButton];
+            UIColor *colorForThisLabel = [self.colors objectAtIndex:currentLabelIndex];
+            thisButton.backgroundColor = colorForThisLabel ;
+        }
+    }
+}
 
 
 

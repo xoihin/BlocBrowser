@@ -236,7 +236,9 @@
 
 - (void)floatingToolbar:(AwesomeFloatingToolbar *)toolbar didTryToPinchWithScale:(UIPinchGestureRecognizer *)recognizer {
     
-    recognizer.view.transform = CGAffineTransformScale(recognizer.view.transform, recognizer.scale, recognizer.scale);
+//    recognizer.view.transform = CGAffineTransformScale(recognizer.view.transform, recognizer.scale, recognizer.scale); // pinch on label titles = ok
+//    self.webView.transform = CGAffineTransformScale(self.webView.transform, recognizer.scale, recognizer.scale);  // pinch on webView = ok
+    self.awesomeToolbar.transform = CGAffineTransformScale(self.awesomeToolbar.transform, recognizer.scale, recognizer.scale); // on toolbar
     recognizer.scale = 1;
     
 }
