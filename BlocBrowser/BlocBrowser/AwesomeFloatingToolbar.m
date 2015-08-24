@@ -160,7 +160,7 @@
     if (recognizer.state == UIGestureRecognizerStateChanged) {
         CGPoint translation = [recognizer translationInView:self];
         
-        NSLog(@"New translation: %@", NSStringFromCGPoint(translation));
+        NSLog(@"Panning: %@", NSStringFromCGPoint(translation));
         
         if ([self.delegate respondsToSelector:@selector(floatingToolbar:didTryToPanWithOffset:)]) {
             [self.delegate floatingToolbar:self didTryToPanWithOffset:translation];
