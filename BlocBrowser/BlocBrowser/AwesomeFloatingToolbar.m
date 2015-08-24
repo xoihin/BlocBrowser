@@ -21,6 +21,8 @@
 @property (nonatomic, strong) UIPinchGestureRecognizer *pinchGesture;
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressGesture;
 
+@property (nonatomic, assign) NSUInteger rotationSequence;
+
 
 @end
 
@@ -41,6 +43,9 @@
                         [UIColor colorWithRed:255/255.0 green:105/255.0 blue:97/255.0 alpha:1],
                         [UIColor colorWithRed:222/255.0 green:165/255.0 blue:164/255.0 alpha:1],
                         [UIColor colorWithRed:255/255.0 green:179/255.0 blue:71/255.0 alpha:1]] mutableCopy];
+        
+        // Set for next color rotation in longPressGesture
+        self.rotationSequence = 1;
         
         NSMutableArray *labelsArray = [[NSMutableArray alloc] init];
         
@@ -182,27 +187,64 @@
     NSLog(@"Long press...");
     
     if (recognizer.state == UIGestureRecognizerStateBegan)  {
-        // Rotate colors in array
-        for (NSUInteger i = 0; i < [self.colors count] ; i++) {
-            NSObject *rotateColor = [self.colors lastObject];
-            if (i < 2) {
-                [self.colors insertObject:rotateColor atIndex:i+1];
-                [self.colors removeLastObject];
-            } else if (i == 2) {
-                [self.colors insertObject:rotateColor atIndex:i];
-                [self.colors removeLastObject];
-            } else if (i == 3) {
-                [self.colors insertObject:rotateColor atIndex:0];
-                [self.colors removeLastObject];
-            }
-            
-        }
+        // The four labels are arranged as follows (See in layoutSubVew method):
+        //  Init=  |0|1|  next rotation: |2|0|  next |3|2| next |1|3|
+        //         |2|3|                 |3|1|       |1|0|      |0|2|
+        
+        // Change array colors to mutable and rotate accordingly in clockwise
+        switch (self.rotationSequence) {
+            case 0:
+                self.colors = [@[[UIColor colorWithRed:199/255.0 green:158/255.0 blue:203/255.0 alpha:1],              // 0
+                                 [UIColor colorWithRed:255/255.0 green:105/255.0 blue:97/255.0 alpha:1],               // 1
+                                 [UIColor colorWithRed:222/255.0 green:165/255.0 blue:164/255.0 alpha:1],              // 2
+                                 [UIColor colorWithRed:255/255.0 green:179/255.0 blue:71/255.0 alpha:1]] mutableCopy]; // 3
+                self.rotationSequence = 1;
+                break;
+                
+            case 1:
+                self.colors = [@[[UIColor colorWithRed:222/255.0 green:165/255.0 blue:164/255.0 alpha:1],              // 2
+                                 [UIColor colorWithRed:199/255.0 green:158/255.0 blue:203/255.0 alpha:1],              // 0
+                                 [UIColor colorWithRed:255/255.0 green:179/255.0 blue:71/255.0 alpha:1],               // 3
+                                 [UIColor colorWithRed:255/255.0 green:105/255.0 blue:97/255.0 alpha:1]] mutableCopy]; // 1
+                self.rotationSequence = 2;
+                break;
+
+            case 2:
+                self.colors = [@[[UIColor colorWithRed:255/255.0 green:179/255.0 blue:71/255.0 alpha:1],                // 3
+                                 [UIColor colorWithRed:222/255.0 green:165/255.0 blue:164/255.0 alpha:1],               // 2
+                                 [UIColor colorWithRed:255/255.0 green:105/255.0 blue:97/255.0 alpha:1],                // 1
+                                 [UIColor colorWithRed:199/255.0 green:158/255.0 blue:203/255.0 alpha:1]] mutableCopy]; // 0
+                self.rotationSequence = 3;
+                break;
+                
+            case 3:
+                self.colors = [@[[UIColor colorWithRed:255/255.0 green:105/255.0 blue:97/255.0 alpha:1],                // 1
+                                 [UIColor colorWithRed:255/255.0 green:179/255.0 blue:71/255.0 alpha:1],                // 3
+                                 [UIColor colorWithRed:199/255.0 green:158/255.0 blue:203/255.0 alpha:1],               // 0
+                                 [UIColor colorWithRed:222/255.0 green:165/255.0 blue:164/255.0 alpha:1]] mutableCopy]; // 2
+                self.rotationSequence = 0;
+                break;
+  
+            default:
+                break;
+}
+        
+        
+//        for (NSUInteger i = 0; i < [self.colors count] ; i++) {
+//            NSObject *lastColorInArray = [self.colors lastObject];
+//            if (i < 2) {
+//                [self.colors insertObject:lastColorInArray atIndex:i+1];
+//                [self.colors removeLastObject];
+//            } else if (i == 2) {
+//                [self.colors insertObject:lastColorInArray atIndex:i];
+//                [self.colors removeLastObject];
+//            } else if (i == 3) {
+//                [self.colors insertObject:lastColorInArray atIndex:0];
+//                [self.colors removeLastObject];
+//            }
+//        }
     
-//        NSObject *moveObject = self.colors[0];
-//        [self.colors removeObjectAtIndex:0];
-//        [self.colors insertObject:moveObject atIndex:[self.colors count]];
-    
-        // Apply colors
+        // Apply colors using the rotated-color-array
         for (UIButton *thisButton in self.labels) {
             NSUInteger currentLabelIndex = [self.labels indexOfObject:thisButton];
             UIColor *colorForThisLabel = [self.colors objectAtIndex:currentLabelIndex];
