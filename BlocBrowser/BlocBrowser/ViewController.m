@@ -99,7 +99,13 @@
     self.textField.frame = CGRectMake(0, 0, width, itemHeight);
     self.webView.frame = CGRectMake(0, CGRectGetMaxY(self.textField.frame), width, browserHeight);
     
-    self.awesomeToolbar.frame = CGRectMake(20, 100, 280, 60);
+    
+//    self.awesomeToolbar.frame = CGRectMake(20, 100, 280, 60);         // Original line
+    CGFloat toolBarWidth = CGRectGetWidth(self.view.bounds) * .8;       // width = 80% of main view's width
+    CGFloat toolBarHeight = CGRectGetHeight(self.view.bounds) * .1;     // Height = 10% of main view's height
+    CGFloat toolBarX = (width / 2) - (toolBarWidth / 2);                // Center horizontally
+    CGFloat toolBarY = (browserHeight / 2) - (toolBarHeight / 2);       // Center vertically
+    self.awesomeToolbar.frame = CGRectMake(toolBarX, toolBarY, toolBarWidth, toolBarHeight);  // Make rect
 }
 
 
