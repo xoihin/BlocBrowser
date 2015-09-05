@@ -163,10 +163,13 @@
 - (void)pinchFired:(UIPinchGestureRecognizer *)recognizer {
     
     if (recognizer.state == UIGestureRecognizerStateChanged) {
-        NSLog(@"Pinching...");
+        CGFloat scale = [recognizer scale];
+        
+        NSLog(@"Pinching: %f", scale);
         if ([self.delegate respondsToSelector:@selector(floatingToolbar:didTryToPinchWithScale:)]) {
-            [self.delegate floatingToolbar:self didTryToPinchWithScale:recognizer];
+            [self.delegate floatingToolbar:self didTryToPinchWithScale:scale];
         }
+        recognizer.scale = 1;
     }
 }
 
